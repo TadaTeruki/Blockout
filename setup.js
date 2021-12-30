@@ -6,8 +6,9 @@ function init(){
 
     screen.width_aspect = 8
     screen.height_aspect = 10
-    screen.margin_pixel = 80.0
     screen.loop_second = 0.01
+    screen.resize_scale = 1.0
+    screen.margin_pixel_scale = 0.1
 
     screen.canvas = document.getElementById("canvas_src")
     set_canvas_size()
@@ -15,8 +16,6 @@ function init(){
 
     screen.canvas.start_width  = screen.canvas.width
     screen.canvas.start_height = screen.canvas.height
-
-    screen.resize_scale = 1.0
 
     main()
 }
@@ -71,10 +70,11 @@ function set_game(){
 
 function set_canvas_size(){
     // canvas に関する設定 (HTMLの内容に反映される)
+    
     screen.canvas.width =
-        Math.min(window.innerWidth, window.innerHeight/screen.height_aspect*screen.width_aspect) - screen.margin_pixel*2
+        Math.min(window.innerWidth, window.innerHeight/screen.height_aspect*screen.width_aspect) * (1.0-screen.margin_pixel_scale*2)
     screen.canvas.height =
-        Math.min(window.innerHeight, window.innerWidth/screen.width_aspect*screen.height_aspect) - screen.margin_pixel*2
+        Math.min(window.innerHeight, window.innerWidth/screen.width_aspect*screen.height_aspect) * (1.0-screen.margin_pixel_scale*2)
     if(screen.canvas.width < 0.0 || screen.canvas.height < 0.0){
         screen.canvas.width = 0.0
         screen.canvas.height = 0.0

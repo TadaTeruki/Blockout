@@ -15,15 +15,12 @@ function remove_object(index){
     }
 }
 
-
-
 function move_paddle_callback(event){
     move_paddle(event.x, "main_paddle")
     draw()
 }
 
 function loop_callback(){
-    //var ball_index = "main_ball"
     game.objects_class_table["ball"].forEach(index => {
         if(game.objects[index].ball_released == false) return
         move_ball(index)
@@ -38,7 +35,7 @@ function ball_release_callback(event){
         game.objects[index].ball_released = true
         game.objects[index].angle = game.objects[index].ball_start_angle
         game.objects[index].velocity =
-            game.objects[index].ball_start_velocity_horizontal_scale_per_second * screen.loop_second * screen.canvas.width
+            game.objects[index].ball_start_velocity_horizontal_scale_per_second * screen.loop_second * screen.canvas.width /screen.resize_scale
     })
 }
 

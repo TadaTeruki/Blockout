@@ -72,7 +72,8 @@ function set_objects(){
         ball_collision: "internal",
         breakout_callback: function(self_index, ball_index){
             var ball_object = game.objects[ball_index]
-            if(ball_object.y >= game.objects[self_index].ey - ball_object.get_r()){
+            var paddle_object = game.objects[ball_object.parent_index]
+            if(ball_object.y >= paddle_object.y){
                 set_ball(ball_index, ball_object.parent_index)
                 draw()
             }

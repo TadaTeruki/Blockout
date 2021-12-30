@@ -52,13 +52,7 @@ function draw(){
                 ctx.fillStyle = circle.fill_style      
                 var circle_x = circle.x * screen.resize_scale
                 var circle_y = circle.y * screen.resize_scale
-                var circle_r = 0.0
-                if(circle.r_horiozontal != undefined){
-                    circle_r = circle.r_horiozontal * screen.resize_scale
-                }
-                if(circle.r_vertical != undefined){
-                    circle_r = circle.r_vertical * screen.resize_scale
-                }
+                var circle_r = circle.get_r()
 
                 ctx.beginPath()
                 ctx.arc(

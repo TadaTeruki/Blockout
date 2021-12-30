@@ -34,19 +34,37 @@ function set_game(){
     game.paddle_height_vertical_scale  = 0.02
     game.ball_width_horizontal_scale = 0.015
 
-    game.ball_start_velocity_horizontal_scale_per_second = 1.0
-    game.ball_start_angle = Math.PI*0.25
-
-    game.ball_released = false
-
     set_objects()
 
     game.index_list = []
+    game.objects_class_table = {}
+
     for (var index in game.objects){
         game.index_list.push(index)
+
+        var object = game.objects[index]
+        if(game.objects_class_table[object.class] == undefined) game.objects_class_table[object.class] = []
+        game.objects_class_table[object.class].push(index)
+
+        if(object.type == "circle"){
+            game.objects[index].get_r = function(){
+                if(this.r_horizontal != undefined){
+                    return this.r_horizontal * screen.resize_scale
+                }
+                if(this.r_vertical != undefined){
+                    return this.r_vertical * screen.resize_scale
+                }
+                return 0.0
+            }
+        }
     }
+
     game.index_list.sort(function(index_a, index_b){
         return game.objects[index_a].z > game.objects[index_b].z
+    })
+
+    game.objects_class_table["ball"].forEach(index => {
+        set_ball(index, game.objects[index].parent_index)
     })
     
 }

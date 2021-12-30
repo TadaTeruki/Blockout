@@ -12,9 +12,12 @@ function move_paddle(event_x_pixel, paddle_index){
 
     game.objects[paddle_index].x = canvas_x_pixel/screen.resize_scale
 
-    if(game.ball_released == false && paddle_index == "main_paddle"){
-        game.objects["main_ball"].x = game.objects[paddle_index].x
-    }
+    game.objects_class_table["ball"].forEach(index => {
+        if(game.objects[index].ball_released == false &&
+            game.objects[index].parent_index == paddle_index){
+            game.objects[index].x = game.objects[paddle_index].x
+        }
+    })
 }
 
 
@@ -24,6 +27,7 @@ function move_ball(ball_index){
     var ball_next_y = 0.0
     var ball_next_angle = game.objects[ball_index].angle
     var max_collision_dist = 100.0
+    var breakout_callback_index = []
 
     var angle_list = [ 0.0, Math.PI*0.5, Math.PI*1.5, Math.PI*1.0]
 
@@ -42,6 +46,7 @@ function move_ball(ball_index){
                 
                 var obj_index = game.index_list[i]
                 var object = game.objects[obj_index]
+
                 if(object.ball_collision == undefined) continue
 
                 var is_internal = false
@@ -66,7 +71,7 @@ function move_ball(ball_index){
                         break
                     }
                     case "circle":{
-                        var circle_r = object.r_horiozontal == undefined ? object.r_vertical: object.r_horiozontal
+                        var circle_r = object.r_horizontal == undefined ? object.r_vertical: object.r_horizontal
                         is_internal = (
                             ball_x > object.x - circle_r &&
                             ball_x < object.x + circle_r &&
@@ -78,9 +83,13 @@ function move_ball(ball_index){
                 }
         
                 if((is_internal == true  && object.ball_collision == "external") ||
-                (is_internal == false && object.ball_collision == "internal") ){
+                   (is_internal == false && object.ball_collision == "internal") ){
                     accepted = false
-                    break
+                    if(angle_list[j] == 0.0){
+                        breakout_callback_index.push(obj_index)
+                    } else {
+                        break
+                    }
                 }
             }
 
@@ -100,5 +109,11 @@ function move_ball(ball_index){
     game.objects[ball_index].x = ball_next_x
     game.objects[ball_index].y = ball_next_y
     game.objects[ball_index].angle = ball_next_angle
+
+    for(var i = 0; i < breakout_callback_index.length; i++){
+        var index = breakout_callback_index[i]
+        if(game.objects[index].breakout_callback == undefined) continue
+        game.objects[index].breakout_callback(index, ball_index)
+    }
 
 }

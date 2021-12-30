@@ -82,15 +82,3 @@ function set_objects(){
     })
 }
 
-function set_ball(ball_index, paddle_index){
-
-    //var ball_object = game.objects[ball_index]
-    var paddle_object = game.objects[paddle_index]
-    game.objects[ball_index].x = paddle_object.x
-    game.objects[ball_index].y = paddle_object.y - paddle_object.height
-    game.objects[ball_index].ball_start_velocity_horizontal_scale_per_second = 1.0
-    game.objects[ball_index].ball_start_angle = Math.PI*0.25
-    game.objects[ball_index].ball_released = false
-
-
-}

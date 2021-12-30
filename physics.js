@@ -29,7 +29,7 @@ function move_ball(ball_index){
     var max_collision_dist = 100.0
     var breakout_callback_index = []
 
-    var angle_list = [ 0.0, Math.PI*0.5, Math.PI*1.5, Math.PI*1.0]
+    var angle_list = [ 0.0, -game.objects[ball_index].angle*2, Math.PI-game.objects[ball_index].angle*2, Math.PI]
 
     collision_loop:
     for(var collision_dist = 1.0; collision_dist <= max_collision_dist; collision_dist++){

@@ -6,7 +6,7 @@ function init(){
 
     screen.width_aspect = 8
     screen.height_aspect = 10
-    screen.loop_second = 0.01
+    screen.loop_second = 0.008
     screen.resize_scale = 1.0
     screen.margin_pixel_scale = 0.1
 
@@ -82,5 +82,16 @@ function set_canvas_size(){
     screen.canvas.style.left = (window.innerWidth-screen.canvas.width)*0.5
     screen.canvas.style.top = (window.innerHeight-screen.canvas.height)*0.5
     screen.canvas.style.position = "fixed"
+
+}
+
+function set_ball(ball_index, paddle_index){
+
+    var paddle_object = game.objects[paddle_index]
+    game.objects[ball_index].x = paddle_object.x
+    game.objects[ball_index].y = paddle_object.y - paddle_object.height
+    game.objects[ball_index].ball_start_velocity_horizontal_scale_per_second = 1.0
+    game.objects[ball_index].ball_start_angle = Math.PI*0.25
+    game.objects[ball_index].ball_released = false
 
 }

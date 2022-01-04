@@ -5,6 +5,28 @@ function get_block_index(ix, iy){
 
 function register_object(index, obj){
     game.objects[index] = obj
+
+    if(game.objects[index].type == "circle"){
+        game.objects[index].get_r = function(){
+            if(this.r_horizontal != undefined){
+                return this.r_horizontal * screen.resize_scale
+            }
+            if(this.r_vertical != undefined){
+                return this.r_vertical * screen.resize_scale
+            }
+            return 0.0
+        }
+    }
+
+    game.index_list.push(index)
+
+    var object = game.objects[index]
+    if(game.objects_class_table[object.class] == undefined) game.objects_class_table[object.class] = []
+    game.objects_class_table[object.class].push(index)
+
+    game.index_list.sort(function(index_a, index_b){
+        return game.objects[index_a].z > game.objects[index_b].z
+    })
 }
 
 function remove_object(index){
@@ -28,15 +50,20 @@ function loop_callback(){
     draw()
 }
 
-function ball_release_callback(event){
-    //var ball_index = "main_ball"
+function release_all_balls(){
     game.objects_class_table["ball"].forEach(index => {
+       
         if(game.objects[index].ball_released == true) return
         game.objects[index].ball_released = true
         game.objects[index].angle = game.objects[index].ball_start_angle
         game.objects[index].velocity =
             game.objects[index].ball_start_velocity_horizontal_scale_per_second * screen.loop_second * screen.canvas.width /screen.resize_scale
     })
+}
+
+function ball_release_callback(event){
+    release_all_balls()
+    signal_ball_released()
 }
 
 function main(){
@@ -49,7 +76,6 @@ function main(){
     window.addEventListener("mousemove", move_paddle_callback)
     window.addEventListener("mouseout" , move_paddle_callback)
     window.addEventListener("touchmove", move_paddle_callback)
-
     window.addEventListener("mousedown", ball_release_callback)
 
     setInterval(loop_callback, screen.loop_second*1000)

@@ -45,6 +45,7 @@ function move_ball(ball_index){
             for (var i = 0; i<game.index_list.length; i++) {
                 
                 var obj_index = game.index_list[i]
+                if(obj_index == ball_index) continue
                 var object = game.objects[obj_index]
 
                 if(object.ball_collision == undefined) continue

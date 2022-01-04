@@ -23,6 +23,7 @@ function set_objects(){
                 ball_collision: "external",
                 breakout_callback: function(self_index, ball_index){
                     remove_object(self_index)
+                    signal_block_broken()
                 },
                 z: 1,
             })
@@ -49,8 +50,8 @@ function set_objects(){
         class: "ball",
         parent_index : "main_paddle",
         type: "circle",
-        x : 0.0,
-        y : 0.0,
+        x : game.objects["main_paddle"].x,
+        y : game.objects["main_paddle"].y - game.objects["main_paddle"].height,
         r_horizontal : game.ball_width_horizontal_scale * screen.canvas.width,
         r_vertical    : undefined,
         fill_style: "#a03030",
@@ -74,8 +75,9 @@ function set_objects(){
             var ball_object = game.objects[ball_index]
             var paddle_object = game.objects[ball_object.parent_index]
             if(ball_object.y >= paddle_object.y){
-                set_ball(ball_index, ball_object.parent_index)
+                set_ball(ball_index)
                 draw()
+                signal_ball_fallen()
             }
         },
         z: 0,

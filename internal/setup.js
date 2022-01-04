@@ -4,11 +4,18 @@ var screen = {}
 
 function init(){
 
-    screen.width_aspect = 8
-    screen.height_aspect = 10
-    screen.loop_second = 0.008
-    screen.resize_scale = 1.0
+    // ブロック崩しの画面の縦横比 ( screen.width_aspect:screen.height_aspect )
+    screen.width_aspect = 4
+    screen.height_aspect = 5
+
+    // 1回のメインループにかける処理
+    screen.loop_second = 0.01
+
+    // ブロック崩しの画面の(画面全体に対する)余白
     screen.margin_pixel_scale = 0.1
+
+    // 画面の大きさの変化 (1.0 固定) 
+    screen.resize_scale = 1.0
 
     screen.canvas = document.getElementById("canvas_src")
     set_canvas_size()
@@ -33,38 +40,18 @@ function set_game(){
     game.paddle_height_vertical_scale  = 0.02
     game.ball_width_horizontal_scale = 0.015
 
-    set_objects()
+    game.ball_num = 1
 
     game.index_list = []
     game.objects_class_table = {}
 
-    for (var index in game.objects){
-        game.index_list.push(index)
-
-        var object = game.objects[index]
-        if(game.objects_class_table[object.class] == undefined) game.objects_class_table[object.class] = []
-        game.objects_class_table[object.class].push(index)
-
-        if(object.type == "circle"){
-            game.objects[index].get_r = function(){
-                if(this.r_horizontal != undefined){
-                    return this.r_horizontal * screen.resize_scale
-                }
-                if(this.r_vertical != undefined){
-                    return this.r_vertical * screen.resize_scale
-                }
-                return 0.0
-            }
-        }
-    }
-
-    game.index_list.sort(function(index_a, index_b){
-        return game.objects[index_a].z > game.objects[index_b].z
-    })
+    set_objects()
 
     game.objects_class_table["ball"].forEach(index => {
-        set_ball(index, game.objects[index].parent_index)
+        set_ball(index)
     })
+
+    signal_game_initialized()
     
 }
 
@@ -85,13 +72,15 @@ function set_canvas_size(){
 
 }
 
-function set_ball(ball_index, paddle_index){
+function set_ball(ball_index, angle){
 
-    var paddle_object = game.objects[paddle_index]
-    game.objects[ball_index].x = paddle_object.x
-    game.objects[ball_index].y = paddle_object.y - paddle_object.height
+    if(angle == undefined) angle = Math.PI*0.25
+
+    var parent_index = game.objects[ball_index].parent_index
+    game.objects[ball_index].x = game.objects[parent_index].x
+    game.objects[ball_index].y = game.objects[parent_index].y - game.objects[parent_index].height
     game.objects[ball_index].ball_start_velocity_horizontal_scale_per_second = 1.0
-    game.objects[ball_index].ball_start_angle = Math.PI*0.25
+    game.objects[ball_index].ball_start_angle = angle
     game.objects[ball_index].ball_released = false
 
 }
